@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -8,7 +8,7 @@ export class UsersEntity {
   @Column({ nullable: false })
   firstname: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastname: string;
 
   @Column({ nullable: false, unique: true })

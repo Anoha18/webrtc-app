@@ -15,10 +15,10 @@ import * as typeormConfig from './config/typeorm.config';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(typeormConfig),
+    UsersModule,
     AuthModule,
-    UsersModule
   ],
-  controllers: [AppController, AuthController, UsersController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

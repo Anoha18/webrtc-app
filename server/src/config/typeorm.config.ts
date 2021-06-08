@@ -1,5 +1,8 @@
 import { ConnectionOptions } from "typeorm";
-require('dotenv');
+import * as path from 'path';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const config: ConnectionOptions = {
   type: 'postgres',
@@ -9,9 +12,9 @@ const config: ConnectionOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [
-    __dirname + '/../**/*.entity.ts'
+    path.join(__dirname, '../**/*.entity.{ts,js}')
   ],
-  migrations: [__dirname + '/../migrations/*.ts'],
+  migrations: [path.join(__dirname, '/../migrations/*.{ts,js}')],
   cli: {
     migrationsDir: 'src/migrations'
   },
