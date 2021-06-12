@@ -19,6 +19,8 @@ export class AllExceptionFilter extends BaseExceptionFilter {
       ? (errorResponse as { message: any }).message
       : errorResponse
     
+
+    console.log('Handled exception: ', exception);
     response.status(status).json({
       success: 0,
       error: errorMessage,

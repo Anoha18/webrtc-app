@@ -16,9 +16,16 @@ export class AuthController {
   @HttpCode(200)
   async signin(@Body() dto: SigninDto) {
     const user = await this.authService.validateUser(dto);
+    const { accessToken } = await this.authService.createJWT({
+      login: user.login,
+      firstname: user.firstname
+    })
     return {
       success: 1,
-      data: user
+      data: {
+        user,
+        accessToken,
+      }
     }
   }
 
