@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { PayloadJWT } from './auth.interfaces';
 import { AuthService } from './auth.service';
 import { SigninDto } from './dto/signin.dto';
 
@@ -16,15 +17,18 @@ export class AuthController {
   @HttpCode(200)
   async signin(@Body() dto: SigninDto) {
     const user = await this.authService.validateUser(dto);
-    const { accessToken } = await this.authService.createJWT({
+    const tokenPayload: PayloadJWT = {
       login: user.login,
-      firstname: user.firstname
-    })
+      firstname: user.firstname,
+    }
+    const accessToken = await this.authService.createAccessToken(tokenPayload)
+    const refreshToken = await this.authService.createRefreshToken(tokenPayload);
     return {
       success: 1,
       data: {
         user,
         accessToken,
+        refreshToken,
       }
     }
   }

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { API } from "./config";
+import { CONFIG } from "./config";
 
 interface ApiResponse {
   success: number,
@@ -13,7 +13,7 @@ class Api {
   private refreshToken: string | null = null;
 
   constructor() {
-    this.url = API.URL
+    this.url = CONFIG.API.URL
   }
 
   setAccessToken(accessToken: string) {
@@ -24,11 +24,52 @@ class Api {
     this.refreshToken = refreshToken;
   }
 
-  async get(url: string, params?: object): Promise<AxiosResponse<ApiResponse>> {
-    const result = await axios.get<ApiResponse>(url, {
-      headers: {
-        Authorization: this.accessToken || undefined,
-      },
+  getHeaders(): object {
+    return {
+      Authorization: this.accessToken || undefined,
+    }
+  }
+
+  async get(path: string, params?: object): Promise<AxiosResponse<ApiResponse>> {
+    const result = await axios.get<ApiResponse>(`${this.url}${path}`, {
+      headers: this.getHeaders(),
+      params
+    });
+
+    if (!result.data.success) {
+      // TODO: Глобально отображать ошибки
+    }
+
+    return result;
+  }
+
+  async post(path: string, data?: object): Promise<AxiosResponse<ApiResponse>> {
+    const result = await axios.post<ApiResponse>(`${this.url}${path}`, data, {
+      headers: this.getHeaders(),
+    });
+
+    if (!result.data.success) {
+      // TODO: Глобально отображать ошибки
+    }
+
+    return result;
+  }
+
+  async put(path: string, data?: object): Promise<AxiosResponse<ApiResponse>> {
+    const result = await axios.put<ApiResponse>(`${this.url}${path}`, data, {
+      headers: this.getHeaders(),
+    });
+
+    if (!result.data.success) {
+      // TODO: Глобально отображать ошибки
+    }
+
+    return result;
+  }
+
+  async delete(path: string, params?: object): Promise<AxiosResponse<ApiResponse>> {
+    const result = await axios.delete<ApiResponse>(`${this.url}${path}`, {
+      headers: this.getHeaders(),
       params
     });
 

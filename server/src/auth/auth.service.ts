@@ -7,12 +7,14 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { PayloadJWT } from './auth.interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from '../users/users.interfaces';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor (
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
 
   async validateUser(dto: SigninDto): Promise<IUser> {
@@ -28,9 +30,14 @@ export class AuthService {
     return user;
   }
 
-  async createJWT(payload: PayloadJWT) {
-    return {
-      accessToken: await this.jwtService.signAsync(payload),
-    }
+  async createAccessToken(payload: PayloadJWT): Promise<string> {
+    return this.jwtService.signAsync(payload);
+  }
+
+  async createRefreshToken(payload: PayloadJWT): Promise<string> {
+    return this.jwtService.signAsync(payload, {
+      secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+      expiresIn: 60 * 60 * 24 * 31
+    })
   }
 }
